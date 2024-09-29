@@ -1,0 +1,424 @@
+import { useState } from "react";
+import "./App.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+function App() {
+  const [clickCounter, setClickCounter] = useState(0);
+  const [screenText, setScreenText] = useState(clickCounter === 0 ? "0" : "0");
+  const [err, setErr] = useState(false);
+
+  const handleResult = (inputEquationStr) => {
+    const result = "";
+    try {
+      result = eval(inputEquationStr);
+      setScreenText(result);
+    } catch (error) {
+      if (inputEquationStr === "0") {
+        setScreenText("0");
+      } else {
+        toast.error(error.message,{
+          autoClose: 3000
+        });
+        setScreenText("Invalid Input");
+        setErr(true);
+        setTimeout(() => {
+          setScreenText("0");
+          setErr(false);
+        }, 3000);
+      }
+      console.log(error.message);
+    }
+    // setScreenText(eval(inputEquationStr))
+    // let result = "";
+    // if (inputEquationStr.includes("/")) {
+    //   let input1 = "";
+    //   let input2 = "";
+    //   let startInd = 0;
+    //   let endInd = 0;
+    //   let newEquation = "";
+    //   let finalNewEquation = "";
+
+    //   //for input 1
+    //   for (let i = inputEquationStr.indexOf("/") - 1; i >= 0; i--) {
+    //     if (
+    //       inputEquationStr[i] === "+" ||
+    //       inputEquationStr[i] === "-" ||
+    //       inputEquationStr[i] === "*" ||
+    //       inputEquationStr[i] === "/" ||
+    //       inputEquationStr[i] === "%"
+    //     ) {
+    //       startInd = i + 1;
+    //       break;
+    //     }
+    //     input1 = inputEquationStr[i] + input1;
+    //   }
+    //   console.log(input1);
+
+    //   //for input 2
+    //   for (
+    //     let i = inputEquationStr.indexOf("/") + 1;
+    //     i <= inputEquationStr.length - 1;
+    //     i++
+    //   ) {
+    //     if (
+    //       inputEquationStr[i] === "+" ||
+    //       inputEquationStr[i] === "-" ||
+    //       inputEquationStr[i] === "*" ||
+    //       inputEquationStr[i] === "/" ||
+    //       inputEquationStr[i] === "%"
+    //     ) {
+    //       endInd = i - 1;
+    //       break;
+    //     }
+    //     endInd = inputEquationStr.length - 1;
+    //     input2 = inputEquationStr[i] + input2;
+    //   }
+    //   console.log(input2);
+    //   console.log((input1 / input2).toString(), "dividation");
+
+    //   result = (input1 / input2).toString();
+    //   console.log(result, "2");
+    //   console.log(startInd, "startInd");
+    //   console.log(endInd, "endInd");
+
+    //   newEquation = inputEquationStr.replace(
+    //     inputEquationStr.substring(startInd, endInd + 1),
+    //     ""
+    //   );
+
+    //   console.log(newEquation, "new Equation");
+    //   for (let i = 0; i < newEquation.length; i++) {
+    //     if (
+    //       i > 0 &&
+    //       (newEquation[i] === "+" ||
+    //         newEquation[i] === "-" ||
+    //         newEquation[i] === "*" ||
+    //         newEquation[i] === "/" ||
+    //         newEquation[i] === "%") &&
+    //       (newEquation[i - 1] === "+" ||
+    //         newEquation[i - 1] === "-" ||
+    //         newEquation[i - 1] === "*" ||
+    //         newEquation[i - 1] === "/" ||
+    //         newEquation[i - 1] === "%")
+    //     ) {
+    //       finalNewEquation = finalNewEquation + result + newEquation[i];
+    //     } else if (
+    //       i === newEquation.length - 1 &&
+    //       endInd === inputEquationStr.length - 1
+    //     ) {
+    //       finalNewEquation = finalNewEquation + newEquation[i] + result;
+    //     } else {
+    //       finalNewEquation = finalNewEquation + newEquation[i];
+    //     }
+    //   }
+    //   console.log(finalNewEquation, "newW");
+
+    //   if (finalNewEquation.includes("/")) {
+    //     // setFinalResult(finalNewEquation);
+    //     setScreenText(finalNewEquation);
+    //     handleResult(finalNewEquation);
+    //     console.log("hello");
+    //   }
+    // }
+    // if (inputEquationStr.includes("*")) {
+    // }
+    // if (inputEquationStr.includes("+")) {
+    // }
+    // if (inputEquationStr.includes("-")) {
+    // }
+    // if (inputEquationStr.includes("%")) {
+    // }
+    // console.log(finalResult, "1");
+  };
+
+  return (
+    <>
+      <ToastContainer />
+      <div className="calculator">
+        <div className="container d-flex justify-content-center">
+          <div className="cal-body rounded shadow p-3">
+            <div className="cal-screen">
+              <span
+                className={`cal-screen-text d-flex justify-content-end pe-3 ${
+                  err && "text-danger text"
+                }`}
+
+              style= {err ? {fontSize: "63px",
+                fontWeight: 500} : {}}
+              >
+                {screenText}
+              </span>
+            </div>
+            <div className="cal-inner-body  d-flex flex-wrap gap-4 mt-4 p-3">
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter !== 0) {
+                    setScreenText((prev) => prev === "%" ? prev :prev + "%");
+                    setClickCounter((prev) => prev + 1);
+                  } 
+                }}
+              >
+                %
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "0");
+                    setClickCounter(0);
+                  } else {
+                    setScreenText((prev) => Math.pow(prev, 2).toString());
+                    setClickCounter(Math.pow(screenText, 2).toString().length);
+                  }
+                }}
+              >
+                x<sup className="sup">2</sup>
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  handleResult(screenText);
+                  // console.log(result, "result");
+                  // setScreenText(result);
+                  // setScreenText(finalResult);
+                 screenText === "0"? setClickCounter(0): setClickCounter(screenText.length);
+                }}
+              >
+                =
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  setScreenText((prev) => "0");
+                  setClickCounter(0);
+                }}
+              >
+                C
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (screenText === "Invalid Input") {
+                    setScreenText("0");
+                  } else if (clickCounter === 0) {
+                    setScreenText((prev) => "0");
+                    setClickCounter(0);
+                  } else if (!(clickCounter === 1)) {
+                    setScreenText((prev) => prev.slice(0, prev.length - 1));
+                    setClickCounter((prev) => prev - 1);
+                  } else {
+                    setScreenText((prev) => "0");
+                    setClickCounter(0);
+                  }
+                }}
+              >
+                <i className="bi bi-backspace-fill"></i>
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "7");
+                    setClickCounter((prev) => prev + 1);
+                  } else {
+                    setScreenText((prev) => prev + "7");
+                    setClickCounter((prev) => prev + 1);
+                  }
+                }}
+              >
+                7
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "8");
+                    setClickCounter((prev) => prev + 1);
+                  } else {
+                    setScreenText((prev) => prev + "8");
+                    setClickCounter((prev) => prev + 1);
+                  }
+                }}
+              >
+                8
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  console.log(clickCounter,"click counter");
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "9");
+                    setClickCounter((prev) => prev + 1);
+                  } else {
+                    setScreenText((prev) => prev + "9");
+                    setClickCounter((prev) => prev + 1);
+                  }
+                }}
+              >
+                9
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter !== 0) {
+                    setScreenText((prev) => prev === "+" ? prev :prev + "+");
+                    setClickCounter((prev) => prev + 1);
+                  } 
+                }}
+              >
+                +
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter !== 0) {
+                    setScreenText((prev) => prev === "-" ? prev :prev + "-");
+                    setClickCounter((prev) => prev + 1);
+                  } 
+                }}
+              >
+                -
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "4");
+                    setClickCounter((prev) => prev + 1);
+                  } else {
+                    setScreenText((prev) => prev + "4");
+                    setClickCounter((prev) => prev + 1);
+                  }
+                }}
+              >
+                4
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "5");
+                    setClickCounter((prev) => prev + 1);
+                  } else {
+                    setScreenText((prev) => prev + "5");
+                    setClickCounter((prev) => prev + 1);
+                  }
+                }}
+              >
+                5
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "6");
+                    setClickCounter((prev) => prev + 1);
+                  } else {
+                    setScreenText((prev) => prev + "6");
+                    setClickCounter((prev) => prev + 1);
+                  }
+                }}
+              >
+                6
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter !== 0) {
+                    setScreenText((prev) => prev === "*" ? prev :prev + "*");
+                    setClickCounter((prev) => prev + 1);
+                  } 
+                }}
+              >
+                *
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter !== 0) {
+                    setScreenText((prev) => prev === "/" ? prev :prev + "/");
+                    setClickCounter((prev) => prev + 1);
+                  } 
+                }}
+              >
+                /
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  setErr(false);
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "3");
+                    setClickCounter((prev) => prev + 1);
+                  } else {
+                    setScreenText((prev) => prev + "3");
+                    setClickCounter((prev) => prev + 1);
+                  }
+                }}
+              >
+                3
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  setErr(false);
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "2");
+                    setClickCounter((prev) => prev + 1);
+                  } else {
+                    setScreenText((prev) => prev + "2");
+                    setClickCounter((prev) => prev + 1);
+                  }
+                }}
+              >
+                2
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  setErr(false);
+                  if (clickCounter === 0) {
+                    setScreenText((prev) => "1");
+                    setClickCounter((prev) => prev + 1);
+                  } else {
+                    setScreenText((prev) => prev + "1");
+                    setClickCounter((prev) => prev + 1);
+                  }
+                }}
+              >
+                1
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  if (clickCounter !== 0) {
+                    setScreenText((prev) => prev === "." ? prev :prev + ".");
+                    setClickCounter((prev) => prev + 1);
+                  } 
+                }}
+              >
+                .
+              </div>
+              <div
+                className="cal-btn"
+                onClick={() => {
+                  setErr(false);
+                  if (clickCounter !== 0) {
+                    setScreenText((prev) => prev === "0" ? prev :prev + "0");
+                    setClickCounter((prev) => prev + 1);
+                  } 
+                }}
+              >
+                0
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default App;
